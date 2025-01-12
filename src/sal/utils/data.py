@@ -72,8 +72,8 @@ def save_dataset(dataset, config):
             config.output_dir = f"data/{config.model_path}"
         Path(config.output_dir).mkdir(parents=True, exist_ok=True)
         dataset.to_json(
-            f"{config.output_dir}/{config.approach}_completions.jsonl", lines=True
+            f"{config.output_dir}/{config.approach}_completions_range_{config.start_id}_to_{config.end_id}.jsonl", lines=True
         )
         logger.info(
-            f"Saved completions to {config.output_dir}/{config.approach}_completions.jsonl"
+            f"Saved completions to {config.output_dir}/{config.approach}_completions_range_{config.start_id}_to_{config.end_id}.jsonl"
         )

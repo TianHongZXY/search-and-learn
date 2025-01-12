@@ -1,0 +1,12 @@
+# refer to src/sal/config.py for more options
+
+model_path: allenai/Llama-3.1-Tulu-3-8B-SFT
+filter_duplicates: true
+approach: beam_search
+n: 32
+search_batch_size: 1  # DO NOT CHANGE!
+  # num_samples: 10       # REMOVE THIS LINE TO RUN ON THE WHOLE DATASET
+seed: 42
+temperature: 0.8
+gpu_memory_utilization: 0.5
+num_iterations: 20

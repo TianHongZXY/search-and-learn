@@ -100,7 +100,7 @@ def _beam_search(batch_of_prompts, config: Config, llm: LLM, prm: PRM) -> list[B
         add_generation_prompt = i == 0
 
         tokenizer = llm.get_tokenizer()
-        if config.custom_chat_template is not None:
+        if config.custom_chat_template is not None and config.custom_chat_template.lower() != "none":
             tokenizer.chat_template = config.custom_chat_template
         templated_convs = tokenizer.apply_chat_template(
             convs,

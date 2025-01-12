@@ -55,6 +55,8 @@ def main():
     prm = load_prm(config)
 
     dataset = get_dataset(config)
+    if config.start_id is not None and config.end_id is not None:
+        dataset = dataset.select(range(config.start_id, config.end_id))
     dataset = dataset.map(
         approach_fn,
         batched=True,

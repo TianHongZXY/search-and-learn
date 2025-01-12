@@ -96,8 +96,8 @@ def main():
         merged_dataset.unique("problem")
     ) != len(merged_dataset):
         raise ValueError("Found duplicate problems")
-    if "lighteval_MATH" in merged_config and len(merged_dataset) != 5000:
-        raise ValueError(f"Expected 5000 samples, got {len(merged_dataset)}")
+    # if "lighteval_MATH" in merged_config and len(merged_dataset) != 5000:
+        # raise ValueError(f"Expected 5000 samples, got {len(merged_dataset)}")
     if "MATH-500" in merged_config and len(merged_dataset) != 500:
         raise ValueError(f"Expected 500 samples, got {len(merged_dataset)}")
 

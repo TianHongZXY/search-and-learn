@@ -67,6 +67,8 @@ class Config:
     # Beam search options:
     filter_duplicates: bool = False
     sort_completed: bool = False
+    start_id: int = None
+    end_id: int = None
 
     def __post_init__(self):
         if self.approach == "dvts":
