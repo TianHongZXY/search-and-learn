@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import logging
 
 import torch
@@ -41,6 +42,10 @@ APPROACHES = {
 def main():
     parser = H4ArgumentParser(Config)
     config = parser.parse()
+    if os.path.exists(f"{config.output_dir}/{config.approach}_completions_range_{config.start_id}_to_{config.end_id}.jsonl"):
+        logger.info(f"Output file {config.approach}_completions_range_{config.start_id}_to_{config.end_id}.jsonl already exists.")
+        logger.info("Passed because of existing file!")
+        return
 
     approach_fn = APPROACHES[config.approach]
 
