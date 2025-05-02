@@ -1,0 +1,19 @@
+# refer to src/sal/config.py for more options
+
+# model_path: Qwen/Qwen2.5-Math-7B
+model_path: /p/llmresearch/thh9bk/verl-v0.2.0/checkpoints/verl/MATH-Qwen2.5-Math-7B-SFT_negative_advantage-bsz_1024-rollout_n_8-kl_coef_0.0-no_adv_normalization-classic_reward-vllm-0.8.2/global_step_112/actor/huggingface
+# model_path: /p/llmresearch/thh9bk/verl-v0.2.0/checkpoints/verl/MATH-Qwen2.5-Math-7B-SFT_positive_advantage-bsz_1024-rollout_n_8-kl_coef_0.0-no_adv_normalization-classic_reward-vllm-0.8.2/global_step_112/actor/huggingface
+approach: best_of_n
+filter_duplicates: true
+  # num_samples: 2         # REMOVE THIS LINE TO RUN ON THE WHOLE DATASET
+dataset_name: "TianHongZXY/MATH"
+n: 256
+search_batch_size: 64
+save_batch_size: 500
+sort_completed: true
+seed: 42
+temperature: 0.6
+top_p: 0.95
+max_tokens: 4096
+gpu_memory_utilization: 0.7
+custom_chat_template: null

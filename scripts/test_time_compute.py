@@ -62,18 +62,28 @@ def main():
     dataset = get_dataset(config)
     if config.start_id is not None and config.end_id is not None:
         dataset = dataset.select(range(config.start_id, config.end_id))
-    dataset = dataset.map(
-        approach_fn,
-        batched=True,
-        batch_size=config.search_batch_size,
-        fn_kwargs={"config": config, "llm": llm, "prm": prm},
-        desc="Running search",
-        load_from_cache_file=False,
-    )
+    for i in range(0, len(dataset), config.save_batch_size):
+        batch = dataset.select(range(i, min(i + config.save_batch_size, len(dataset))))
+        batch = batch.map(
+            approach_fn,
+            batched=True,
+            batch_size=config.search_batch_size,
+            fn_kwargs={"config": config, "llm": llm, "prm": prm},
+            desc="Running search",
+            load_from_cache_file=False,
+        )
+    # dataset = dataset.map(
+    #     approach_fn,
+    #     batched=True,
+    #     batch_size=config.search_batch_size,
+    #     fn_kwargs={"config": config, "llm": llm, "prm": prm},
+    #     desc="Running search",
+    #     load_from_cache_file=False,
+    # )
 
-    dataset = score(dataset, config)
+        batch = score(batch, config)
 
-    save_dataset(dataset, config)
+        save_dataset(batch, config, i)
     logger.info("Done 🔥!")
 
 

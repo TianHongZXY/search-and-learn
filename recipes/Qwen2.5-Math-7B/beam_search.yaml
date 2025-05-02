@@ -1,0 +1,16 @@
+# refer to src/sal/config.py for more options
+
+model_path: Qwen/Qwen2.5-Math-7B
+filter_duplicates: true
+approach: beam_search
+dataset_name: "TianHongZXY/MATH"
+n: 32
+search_batch_size: 1  # DO NOT CHANGE!
+num_samples: 2       # REMOVE THIS LINE TO RUN ON THE WHOLE DATASET
+seed: 42
+temperature: 0.6
+top_p: 0.95
+max_tokens: 3072
+gpu_memory_utilization: 0.6
+num_iterations: 20
+custom_chat_template: null

@@ -37,7 +37,7 @@ def get_dataset(config: Config) -> Dataset:
     return dataset
 
 
-def save_dataset(dataset, config):
+def save_dataset(dataset, config, subset_idx):
     if config.push_to_hub:
         # Since concurrent pushes can get rejected by the Hub, we make several attempts to push the dataset with try/except
         for _ in range(20):
@@ -69,11 +69,11 @@ def save_dataset(dataset, config):
         logger.info(f"Pushed dataset to {url}")
     else:
         if config.output_dir is None:
-            config.output_dir = f"data/{config.model_path}"
+            config.output_dir = f"data/{config.model_path}".split("/p/llmresearch/thh9bk/verl-v0.2.0/checkpoints/verl/")[-1]
         Path(config.output_dir).mkdir(parents=True, exist_ok=True)
         dataset.to_json(
-            f"{config.output_dir}/{config.approach}_completions_range_{config.start_id}_to_{config.end_id}.jsonl", lines=True
+            f"{config.output_dir}/{config.approach}_completions-temp_{config.temperature}-top_p_{config.top_p}-n_{config.n}-seed_{config.seed}-iter_{config.num_iterations}-range_{config.start_id}_to_{config.end_id}-subset_{subset_idx}.jsonl", lines=True
         )
         logger.info(
-            f"Saved completions to {config.output_dir}/{config.approach}_completions_range_{config.start_id}_to_{config.end_id}.jsonl"
+            f"Saved completions to {config.output_dir}/{config.approach}_completions-temp_{config.temperature}-top_p_{config.top_p}-n_{config.n}-seed_{config.seed}-iter_{config.num_iterations}-range_{config.start_id}_to_{config.end_id}-subset_{subset_idx}.jsonl"
         )
