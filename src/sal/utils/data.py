@@ -69,7 +69,7 @@ def save_dataset(dataset, config, subset_idx):
         logger.info(f"Pushed dataset to {url}")
     else:
         if config.output_dir is None:
-            config.output_dir = f"data/{config.model_path}".split("/p/llmresearch/thh9bk/verl-v0.2.0/checkpoints/verl/")[-1]
+            config.output_dir = f"data/{config.model_path}".split("/home/ubuntu/checkpoints/")[-1]
         Path(config.output_dir).mkdir(parents=True, exist_ok=True)
         dataset.to_json(
             f"{config.output_dir}/{config.approach}_completions-temp_{config.temperature}-top_p_{config.top_p}-n_{config.n}-seed_{config.seed}-iter_{config.num_iterations}-range_{config.start_id}_to_{config.end_id}-subset_{subset_idx}.jsonl", lines=True

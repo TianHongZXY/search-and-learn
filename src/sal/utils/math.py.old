@@ -13,14 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import math
 import random
 import signal
 from collections import defaultdict
 from multiprocessing import Manager
 from typing import Any, Dict, List, Literal
-from functools import lru_cache
 
 import numpy as np
 from latex2sympy2 import latex2sympy
@@ -52,37 +50,8 @@ def timeout_handler(signum, frame):
     raise TimeoutException
 
 
-# Create shared resources lazily
-_manager = None
-shared_cache = {}
-
-
-def initialize_shared_resources():
-    """Initialize the multiprocessing Manager and shared dictionary.
-    
-    This should be called explicitly at application startup rather than at import time
-    to avoid conflicts with vllm's process management.
-    """
-    global _manager, shared_cache
-    if _manager is None:
-        _manager = Manager()
-        shared_cache = _manager.dict()
-    return shared_cache
-
-
-def get_shared_cache():
-    """Get the shared cache, initializing it if necessary."""
-    return initialize_shared_resources()
-
-
-def cleanup_shared_resources():
-    """Clean up shared resources when they're no longer needed."""
-    global _manager, shared_cache
-    if _manager is not None:
-        shared_cache.clear()
-        _manager.shutdown()
-        _manager = None
-        shared_cache = {}
+manager = Manager()
+shared_cache = manager.dict()
 
 
 def memoized_canonical_form(expression: str, timeout_seconds: int = 3) -> str:
@@ -97,12 +66,9 @@ def memoized_canonical_form(expression: str, timeout_seconds: int = 3) -> str:
     Returns:
         str: The canonical form of the expression or the original expression as fallback.
     """
-    # Ensure shared cache is initialized
-    cache = get_shared_cache()
-    
     # Check if the result is already cached
-    if expression in cache:
-        return cache[expression]
+    if expression in shared_cache:
+        return shared_cache[expression]
 
     try:
         # Set up the timeout handler
@@ -117,17 +83,17 @@ def memoized_canonical_form(expression: str, timeout_seconds: int = 3) -> str:
         signal.alarm(0)
 
         canonical_form = latex(simplified_expr)  # Convert back to a string
-        cache[expression] = canonical_form  # Cache the result
+        shared_cache[expression] = canonical_form  # Cache the result
         return canonical_form
     except TimeoutException:
         # Fallback: Use a stripped version of the input on timeout
         fallback = strip_string(expression)
-        cache[expression] = fallback  # Cache the fallback result
+        shared_cache[expression] = fallback  # Cache the fallback result
         return fallback
     except Exception:
         # Fallback: Use a stripped version of the input on other errors
         fallback = strip_string(expression)
-        cache[expression] = fallback  # Cache the fallback result
+        shared_cache[expression] = fallback  # Cache the fallback result
         return fallback
     finally:
         # Ensure the alarm is turned off
@@ -322,8 +288,3 @@ def compute_level(
         return {f"level_{name}": 2}
     else:
         return {f"level_{name}": 1}
-
-
-if __name__ == "__main__":
-    initialize_shared_resources()
-
