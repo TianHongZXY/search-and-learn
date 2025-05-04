@@ -26,7 +26,7 @@ def best_of_n(x, config: Config, llm: LLM, prm: PRM):
 
     convs = [
         [
-            {"role": "system", "content": config.system_prompt},
+            # {"role": "system", "content": config.system_prompt},
             {"role": "user", "content": prompt},
         ]
         for prompt in x["problem"]

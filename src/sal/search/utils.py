@@ -26,7 +26,7 @@ def build_conv(
     prompt: str, response: str | None, system_prompt: str
 ) -> list[dict[str, str]]:
     conversation = [
-        {"role": "system", "content": system_prompt},
+        # {"role": "system", "content": system_prompt},
         {"role": "user", "content": prompt},
     ]
 
